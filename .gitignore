@@ -8,7 +8,16 @@ pom.xml.asc
 /checkouts/
 .lein-deps-sum
 .lein-repl-history
+.cider-repl-history
 .lein-plugins/
 .lein-failures
 .nrepl-port
 .cpcache/
+.elpath/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+.shadow-cljs/
+resources/public/js/
