@@ -17,23 +17,3 @@
 
 (defn save-projects [projects]
   (.setItem js/localStorage storage-key (serialize projects)))
-
-(defn add-project [project]
-  (let [current-projects (get-projects)
-        new-project (assoc project :id (str (random-uuid)))
-        new-projects (conj current-projects new-project)]
-    (save-projects new-projects)))
-
-(defn update-project [id updated-fields]
-  (let [current-projects (get-projects)
-        updated-projects (mapv (fn [project] (if (= (:id project) id)
-                                               (merge project updated-fields)
-                                               project))
-                               current-projects)]
-    (save-projects updated-projects)))
-
-(defn delete-project [id]
-  (let [current-projects (get-projects)
-        updated-projects (vec (remove (fn [project] (= (:id project) id))
-                                      current-projects))]
-    (save-projects updated-projects)))
