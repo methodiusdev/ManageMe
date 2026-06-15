@@ -1,7 +1,6 @@
 (ns manageme.views
   (:require [manageme.state :as state]))
 
-
 (defn project-form []
   [:div
    [:h3 "Add new project: "]
