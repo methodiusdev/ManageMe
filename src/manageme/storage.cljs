@@ -19,5 +19,10 @@
 
 (defn with-delay [thunk]
   (js/Promise.
-   (fn [resolve _reject]
-     (js/setTimeout (fn [] (resolve (thunk))) 200))))
+   (fn [resolve reject]
+     (js/setTimeout
+      (fn [] (try
+               (resolve (thunk))
+               (catch :default e
+                 (reject e))))
+      200))))

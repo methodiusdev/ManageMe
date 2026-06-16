@@ -23,6 +23,12 @@
    (fn [data] (swap! app-state assoc :projects data))
    "Error fetching data."))
 
+(defn add-project! [project-fields]
+  (handle-request!
+   (api/http-post-projects project-fields)
+   (fn [new-project] (swap! app-state update :projects conj new-project))
+   "Error creating project."))
+
 ;; (defn add-project! [project]
 ;;   (let [new-project (assoc project :id (str (random-uuid)))]
 ;;     (swap! app-state update :projects conj new-project)))
