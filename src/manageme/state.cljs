@@ -36,9 +36,14 @@
      (swap! app-state update :projects
             (fn [projects]
               (mapv #(if (= (:id %) id) updated-project %) projects))))
-   "Error updating project"))
+   "Error updating project."))
 
-;; (defn delete-project! [project-id]
-;;   (swap! app-state update :projects
-;;          (fn [projects] (vec (remove #(= (:id %) project-id) projects)))))
+(defn delete-project! [id]
+  (handle-request!
+   (api/http-delete-project id)
+   (fn [_success-payload]
+     (swap! app-state update :projects
+            (fn [projects]
+              (vec (remove #(= (:id %) id) projects)))))
+   "Error deleting project."))
 

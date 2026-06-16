@@ -34,3 +34,14 @@
             updated-project)
           (throw (js/Error. (str "Resource not found: Project with ID " id " does not exist.")))))
       (throw (js/Error. (str "Validation error: " (:error validation)))))))
+
+;; DELETE /projects/:id
+(define-endpoint http-delete-project [id]
+  (let [projects (s/get-local-storage)
+        project-exists? (some #(= (:id %) id) projects)]
+    (if project-exists?
+      (let [updated-list (vec (remove #(= (:id %) id) projects))]
+        (s/set-local-storage updated-list)
+        {:id id :status "deleted"})
+      (throw (js/Error.
+              (str "Resource not found: Cannot delete non-existent project with ID " id))))))
