@@ -29,16 +29,16 @@
    (fn [new-project] (swap! app-state update :projects conj new-project))
    "Error creating project."))
 
-;; (defn add-project! [project]
-;;   (let [new-project (assoc project :id (str (random-uuid)))]
-;;     (swap! app-state update :projects conj new-project)))
+(defn update-project! [id updated-fields]
+  (handle-request!
+   (api/http-patch-project id updated-fields)
+   (fn [updated-project]
+     (swap! app-state update :projects
+            (fn [projects]
+              (mapv #(if (= (:id %) id) updated-project %) projects))))
+   "Error updating project"))
 
 ;; (defn delete-project! [project-id]
 ;;   (swap! app-state update :projects
 ;;          (fn [projects] (vec (remove #(= (:id %) project-id) projects)))))
 
-;; (defn update-project! [project-id updated-fields]
-;;   (swap! app-state update :projects
-;;          (fn [projects]
-;;            (mapv #(if (= (:id %) project-id) (merge % updated-fields) %)
-;;                  projects))))
