@@ -1,6 +1,7 @@
 (ns manageme.core
   (:require [reagent.core :as r]
             [reagent.dom.client :as rdom]
+            [manageme.state :as s]
             [manageme.views :as v]))
 
 (defonce react-root
@@ -13,4 +14,5 @@
   (rdom/render react-root [app]))
 
 (defn init []
+  (s/fetch-projects!)
   (reload))
