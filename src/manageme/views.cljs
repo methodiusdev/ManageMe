@@ -14,25 +14,33 @@
      "Kira's Workspace"]]])
 
 (defn project-card [{:keys [id title description]}]
-  [:div {:class "bg-white rounded-xl border border-gray-200 shadow-sm
-                 hover:shadow-md hover:border-emerald-200 transition-all p-6
-                 flex flex-col justify-between"}
-   [:div
-    [:div {:class "flex justify-between items-start mb-2"}
-     [:h3 {:class "text-base font-bold text-gray-900 tracking-tight"} title]
-     [:span {:class "px-2 py-0.5 text-xs font-semibold rounded-md bg-emerald-50
-                     text-emerald-700 border border-emerald-100"}
-      "Active"]]
-    [:p {:class "text-gray-600 text-sm mt-2 leading-relaxed"}
-     description]]
-   [:div {:class "mt-6 pt-3 border-t border-gray-50 flex justify-end space-x-4"}
-    [:button {:class "text-xs text-gray-400 hover:text-emerald-600
-                      font-semibold transition-colors"}
-     "Edit"]
-    [:button {:class "text-xs text-red-400 hover:text-red-600
-                      font-semibold transition-colors"
-              :on-click #(state/delete-project! id)}
-     "Delete"]]])
+  (let [expanded? (r/atom false)]
+    (fn [{:keys [id title description]}]
+      [:div {:class "bg-white rounded-xl border border-gray-200 shadow-sm
+                     hover:shadow-md hover:border-emerald-200 transition-all p-6
+                     flex flex-col justify-between"}
+       [:div
+        [:div {:class "flex justify-between items-start mb-2"}
+         [:h3 {:class "text-base font-bold text-gray-900 tracking-tight"} title]
+         [:span {:class "px-2 py-0.5 text-xs font-semibold rounded-md
+                         bg-emerald-50 text-emerald-700 border border-emerald-100"}
+          "Active"]]
+        [:p {:class (str "text-gray-600 text-sm mt-2 leading-relaxed "
+                         (when-not @expanded? "line-clamp-3"))}
+         description]
+        [:button {:class "text-xs font-bold text-emerald-600
+                          hover:text-emerald-700 mt-2 transition-colors block"
+                  :on-click #(swap! expanded? not)}
+         (if @expanded? "Show Less ↑" "Show More ↓")]]
+       [:div {:class "mt-6 pt-3 border-t border-gray-50
+                      flex justify-end space-x-4"}
+        [:button {:class "text-xs text-gray-400 hover:text-emerald-600
+                          font-semibold transition-colors"}
+         "Edit"]
+        [:button {:class "text-xs text-red-400 hover:text-red-600
+                          font-semibold transition-colors"
+                  :on-click #(state/delete-project! id)}
+         "Delete"]]])))
 
 (defn main-view []
   (let [{:keys [projects loading? error]} @state/app-state]
