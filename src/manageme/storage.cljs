@@ -3,17 +3,26 @@
 
 (def storage-key "manageme-projects")
 
-(defn serialize [data]
+(defn- serialize [data]
   "Returns EDN string from Clojure `data`"
   (pr-str data))
 
-(defn deserialize [edn-string]
+(defn- deserialize [edn-string]
   "Returns Clojure data structures from `edn-string`"
-  (when edn-string
-    (read-string edn-string)))
+  (when edn-string (read-string edn-string)))
 
-(defn get-projects []
+(defn get-local-storage []
   (or (deserialize (.getItem js/localStorage storage-key)) []))
 
-(defn save-projects [projects]
+(defn set-local-storage [projects]
   (.setItem js/localStorage storage-key (serialize projects)))
+
+(defn with-delay [thunk]
+  (js/Promise.
+   (fn [resolve reject]
+     (js/setTimeout
+      (fn [] (try
+               (resolve (thunk))
+               (catch :default e
+                 (reject e))))
+      200))))
